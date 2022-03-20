@@ -6,3 +6,5 @@
 - Web development: Server with Python and Flask.
 - Gateway Nodes: Linux and Python
 - Electronics: Microcontrollers and Sensors
+
+![alt text](https://github.com/AlessandroGulli/AI_MS_Degree/edit/main/SmartGreenCare/images/NDVI.jpg?raw=true)
