@@ -7,4 +7,4 @@
 - Gateway Nodes: Linux and Python
 - Electronics: Microcontrollers and Sensors
 
-![Screenshot](NDVI.jpg)
+![Model](https://raw.githubusercontent.com/AlessandroGulli/AI_MS_Degree/tree/main/SmartGreenCare/images/NDVI.jpg)
