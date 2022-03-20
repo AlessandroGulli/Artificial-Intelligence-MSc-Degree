@@ -7,4 +7,4 @@
 - Gateway Nodes: Linux and Python
 - Electronics: Microcontrollers and Sensors
 
-
+![Image](NDVI.jpg)
