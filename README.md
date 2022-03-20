@@ -1,3 +1,3 @@
 # AI_MS_Degree
 
-A collection of some of the projects realized during my MS in Computer Science with a curriculum in Artificial Intelligence
+A collection of some of the projects realized during my MS in Artificial Intelligence
