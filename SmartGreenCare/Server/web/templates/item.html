@@ -1,0 +1,1273 @@
+{% extends "layout.html" %}
+{% block script %}
+<!-- Highcharts Libraries Import -->
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/data.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<!-- Aijax Libraries Import -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<style>
+    
+    .highcharts-figure, 
+    
+    .highcharts-data-table table {
+        min-width: 360px; 
+        max-width: 800px;
+        margin: 1em auto;        
+    }
+    
+    .highcharts-data-table table {
+        font-family: Verdana, sans-serif;
+        border-collapse: collapse;
+        border: 1px solid #EBEBEB;
+        margin: 10px auto;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+    }
+    .highcharts-data-table caption {
+        padding: 1em 0;
+        font-size: 1.2em;
+        color: #555;
+    }
+    .highcharts-data-table th {
+        font-weight: 600;
+        padding: 0.5em;
+    }
+    .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+        padding: 0.5em;
+    }
+    .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+        background: #f8f8f8;
+    }
+    .highcharts-data-table tr:hover {
+        background: #f1f7ff;
+    }
+</style>
+
+<style>
+    .highcharts-gauges .chart-container {
+        width:  300px;
+        height: 200px;
+        float: left;        
+    }
+    
+    .highcharts-gauges, .highcharts-data-table table {
+        width: 600px;
+        margin: 0 auto;
+    }
+    
+    .highcharts-data-table table {
+        font-family: Verdana, sans-serif;
+        border-collapse: collapse;
+        border: 1px solid #EBEBEB;
+        margin: 10px auto;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+    }
+    .highcharts-data-table caption {
+        padding: 1em 0;
+        font-size: 1.2em;
+        color: #555;
+    }
+    .highcharts-data-table th {
+        font-weight: 600;
+        padding: 0.5em;
+    }
+    .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+        padding: 0.5em;
+    }
+    .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+        background: #f8f8f8;
+    }
+    .highcharts-data-table tr:hover {
+        background: #033319;
+    }
+    
+    @media (max-width: 600px) {
+        .highcharts-gauges, .highcharts-data-table table {
+            width: 100%;
+        }
+        .highcharts-gauges .chart-container {
+            width: 300px;
+            float: none;
+            margin: 0 auto;
+        }
+    }
+</style>
+
+
+{% endblock script %}
+
+{% block my_content %}
+
+<img src="{{ url_for('static', filename='plant2.jpg') }}" style="width:100%;height:350px">
+<h1 style="text-align:center;font-size:300%;font-family:Cambria;"> {{context.plant_name| safe}} </h1>
+
+
+<figure class="highcharts-gauges">  
+    <h1></h1>  
+    <div id="container_temperature"  class="chart-container"></div>
+    <div id="container_airhumidity"  class="chart-container"></div>
+    <div id="container_soilhumidity" class="chart-container"></div>
+    <div id="container_waterlevel"   class="chart-container"></div>
+    <div id="container_ndvi"         class="chart-container"></div>
+    <h1></h1>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</figure>
+
+<figure class="highcharts-figure">
+ 
+    
+    <h1></h1>
+    <div id="container_temperature_graph"></div>
+    <h1></h1> 
+    <br>
+    <h1></h1>
+    <div id="container_air_humidity_graph"></div>
+    <h1></h1> 
+    <br>
+    <h1></h1> 
+    <div id="container_soil_humidity_graph"></div>  
+    <h1></h1>
+    <br>
+    <h1></h1> 
+    <div id="container_water_level_graph"></div>  
+    <h1></h1>
+    <br>
+    <h1></h1> 
+    <div id="container_ndvi_graph"></div>  
+    <h1></h1>
+    <br>
+    <br>
+    <br>
+ 
+</figure>
+
+
+<div class="card-header">
+    <label for="parameters">Parameters</label>
+</div>
+
+<div class="card-body">
+    <div class="row">
+        <div class="water">
+            <label>Water Level Alarm [cm]</label>
+            <input class="form-control" id="water" placeholder="{{context.water_level_alarm}}" name="water" type="text">
+        </div>
+        <div class="high">
+            <label>Pump Stop - Soil Hum [%]</label>
+            <input class="form-control" id="high" placeholder="{{context.soil_hysteresis_high}}" name="high" type="text">
+        </div>
+        <div class="low">
+            <label>Pump Start - Soil Hum [%]</label>
+            <input class="form-control" id="low" placeholder="{{context.soil_hysteresis_low}}" name="low" type="text">
+        </div>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" id="outdoor" name="outdoor" type="checkbox">
+        <label for="outdoor" class="form-check-label">Outdoor</label>
+    </div>
+</div>
+<div class="card-footer">
+  <button type="submit" id="demo" class="btn btn-primary" >Submit</button>
+</div>
+
+<script>
+    $(function () {
+      $('#demo').click(function (event) {
+        $.post(
+          '/update_param', {
+            water_level_alarm: $('input[name=water]').val(),
+            soil_hysteresis_high: $('input[name=high]').val(),
+            soil_hysteresis_low: $('input[name=low]').val(),
+            outdoor: $('input[name=outdoor]').is(':checked'),
+            code:'{{context.mac_address}}',
+            name:'{{context.plant_name}}'
+          }, function () {
+            $('.success_msg').append("Success").fadeOut();
+          }
+        );
+        event.preventDefault();
+      });
+    });
+</script>
+
+<script>
+
+    var gaugeTemperatureOptions = {
+        chart: {
+            type: 'solidgauge'
+        },
+
+        title: null,
+
+        credits: {
+            enabled: false
+        },
+
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+
+        exporting: {
+            enabled: false
+        },
+
+        tooltip: {
+            enabled: false
+        },
+
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.3, '#ffb303'], 
+                [0.6, '#ff8903'], 
+                [0.9, '#ff7d03'] 
+            ],
+            lineWidth: 0,
+            tickWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            title: {
+                y: -70
+            },
+            labels: {
+                y: 16
+            }
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                },
+                opacity:0.5
+            }
+        }
+    };
+
+    var gaugeAirHumidityOptions = {
+        chart: {
+            type: 'solidgauge'
+        },
+
+        title: null,
+
+        credits: {
+            enabled: false
+        },
+
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+
+        exporting: {
+            enabled: false
+        },
+
+        tooltip: {
+            enabled: false
+        },
+
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.3, '#14e37c'], 
+                [0.6, '#13ed3f'], 
+                [0.9, '#48d411'] 
+            ],
+            lineWidth: 0,
+            tickWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            title: {
+                y: -70
+            },
+            labels: {
+                y: 16
+            }
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                },
+                opacity:0.5
+            }
+        }
+    };
+
+    var gaugeSoilHumidityOptions = {
+        chart: {
+            type: 'solidgauge'
+        },
+
+        title: null,
+
+        credits: {
+            enabled: false
+        },
+
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+
+        exporting: {
+            enabled: false
+        },
+
+        tooltip: {
+            enabled: false
+        },
+
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.3, '#63656b'],
+                [0.6, '#2f3136'], 
+                [0.9, '#191b21'] 
+            ],
+            lineWidth: 0,
+            tickWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            title: {
+                y: -70
+            },
+            labels: {
+                y: 16
+            }
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                },
+                opacity:0.5
+            }
+        }
+    };
+
+    var gaugeWaterLevelOptions = {
+        chart: {
+            type: 'solidgauge'
+        },
+
+        title: null,
+
+        credits: {
+            enabled: false
+        },
+
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+
+        exporting: {
+            enabled: false
+        },
+
+        tooltip: {
+            enabled: false
+        },
+
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.3, '#0ac2f0'],
+                [0.6, '#0a66f0'], 
+                [0.9, '#0a0af0'] 
+            ],
+            lineWidth: 0,
+            tickWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            title: {
+                y: -70
+            },
+            labels: {
+                y: 16
+            }
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                },
+                opacity:0.5
+            }
+        }
+    };
+
+    var gaugeNDVIOptions = {
+        chart: {
+            type: 'solidgauge'
+        },
+
+        title: null,
+
+        credits: {
+            enabled: false
+        },
+
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+
+        exporting: {
+            enabled: false
+        },
+
+        tooltip: {
+            enabled: false
+        },
+
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.3, '#ab3705'],
+                [0.6, '#7f8f09'], 
+                [0.9, '#027506'] 
+            ],
+            lineWidth: 0,
+            tickWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            title: {
+                y: -70
+            },
+            labels: {
+                y: 16
+            }
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                },
+                opacity:0.5
+            }
+        }
+    };
+
+    // The Temperature gauge
+    var chartTemperature = Highcharts.chart('container_temperature', Highcharts.merge(gaugeTemperatureOptions, {
+        yAxis: {
+            min: 0,
+            max: 60,
+            title: {
+                text: 'Temperature'
+            }
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        series: [{
+            name: 'Temperature',
+            data: [0],
+            dataLabels: {
+                format:
+                    '<div style="text-align:center">' +
+                    '<span style="font-size:25px">{y}</span><br/>' +
+                    '<span style="font-size:12px;opacity:0.4">°C</span>' +
+                    '</div>'
+            },
+            tooltip: {
+                valueSuffix: ' °C'
+            }
+        }]
+    }));
+
+    // The Air Humidity gauge
+    var chartAirHumidity = Highcharts.chart('container_airhumidity', Highcharts.merge(gaugeAirHumidityOptions, {
+        yAxis: {
+            min: 0,
+            max: 100,
+            title: {
+                text: 'Air Humidity'
+            }
+        },
+
+        series: [{
+            name: 'Air Humidity',
+            data: [0],
+            dataLabels: {
+                format:
+                    '<div style="text-align:center">' +
+                    '<span style="font-size:25px">{y:.1f}</span><br/>' +
+                    '<span style="font-size:12px;opacity:0.4">' +
+                    '%' +
+                    '</span>' +
+                    '</div>'
+            },
+            tooltip: {
+                valueSuffix: ' %'
+            }
+        }]
+    }));
+
+    // The Soil Humidity gauge
+    var chartSoilHumidity = Highcharts.chart('container_soilhumidity', Highcharts.merge(gaugeSoilHumidityOptions, {
+        yAxis: {
+            min: 0,
+            max: 100,
+            title: {
+                text: 'Soil Humidity'
+            }
+        },
+
+        series: [{
+            name: 'Soil Humidity',
+            data: [0],
+            dataLabels: {
+                format:
+                    '<div style="text-align:center">' +
+                    '<span style="font-size:25px">{y:.1f}</span><br/>' +
+                    '<span style="font-size:12px;opacity:0.4">' +
+                    '%' +
+                    '</span>' +
+                    '</div>'
+            },
+            tooltip: {
+                valueSuffix: ' %'
+            }
+        }]
+    }));
+
+    // The Water Level gauge
+    var chartWaterLevel = Highcharts.chart('container_waterlevel', Highcharts.merge(gaugeWaterLevelOptions, {
+        yAxis: {
+            min: 0,
+            max: 50,
+            title: {
+                text: 'Water Level'
+            }
+        },
+
+        series: [{
+            name: 'Water Level',
+            data: [0],
+            dataLabels: {
+                format:
+                    '<div style="text-align:center">' +
+                    '<span style="font-size:25px">{y:.1f}</span><br/>' +
+                    '<span style="font-size:12px;opacity:0.4">' +
+                    'cm' +
+                    '</span>' +
+                    '</div>'
+            },
+            tooltip: {
+                valueSuffix: ' cm'
+            }
+        }]
+    }));
+
+    // The NDVI gauge
+    var chartNDVI = Highcharts.chart('container_ndvi', Highcharts.merge(gaugeNDVIOptions, {
+        yAxis: {
+            min: -1,
+            max: 1,
+            title: {
+                text: 'NDVI'
+            }
+        },
+
+        series: [{
+            name: 'NDVI',
+            data: [-1],
+            dataLabels: {
+                format:
+                    '<div style="text-align:center">' +
+                    '<span style="font-size:25px">{y:.1f}</span><br/>' +
+                    '<span style="font-size:12px;opacity:0.4">' +
+                    '' +
+                    '</span>' +
+                    '</div>'
+            },
+            tooltip: {
+                valueSuffix: ' '
+            }
+        }]
+    }));
+
+
+    // Bring life to the dials
+    setInterval(function () {
+
+        var requests = $.get('/last_data/{{context.mac_address| safe}}');
+
+        var tm = requests.done(function (result)
+        {
+            var point,
+            newVal;
+
+            // Temperature
+            if (chartTemperature) {
+                point = chartTemperature.series[0].points[0];
+                newVal = result[0];
+                point.update(newVal);
+            }
+
+            // Air Humidity
+            if (chartAirHumidity) {
+                point = chartAirHumidity.series[0].points[0];            
+                newVal = result[1];
+                point.update(newVal);
+            }
+
+            // Soil Humidity
+            if (chartSoilHumidity) {
+                point = chartSoilHumidity.series[0].points[0];
+                newVal = result[2];
+                point.update(newVal);
+            }
+
+            // Water Level
+            if (chartWaterLevel) {
+                point = chartWaterLevel.series[0].points[0];            
+                newVal = result[3];
+                point.update(newVal);
+            }
+
+            // NDVI
+            if (chartNDVI) {
+                point = chartNDVI.series[0].points[0];            
+                newVal = result[4];
+                point.update(newVal);
+            }
+        });
+        
+    }, 1000);
+</script>
+
+<script>
+
+    
+    var data = {{context.temperature| safe}};
+    chart = Highcharts.stockChart('container_temperature_graph', {
+        chart: {
+            height: 400,
+            zoomType: 'xy'
+        },
+
+        title: {
+            text: 'Temperature'
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        subtitle: {
+            text: 'Click small/large buttons or change window size to test responsiveness'
+        },
+
+        xAxis: {
+            type: 'datetime',                    
+        },
+
+        yAxis: {
+            title: {
+                text: 'Temperature [°C]'
+            },
+            labels: {
+                align: 'left',
+                reserveSpace: true
+            }    
+        },
+
+        rangeSelector: {
+            inputPosition: {
+                align: 'left',
+                x: 0,
+                y: 0
+            },
+            buttonPosition: {
+                align: 'right',
+                x: 0,
+                y: 0
+            },
+        },
+
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[6]],
+                        [1, Highcharts.color(Highcharts.getOptions().colors[6]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+
+
+        series: [{
+            name: 'Temperature [°C]',
+            data: data,
+            type: 'area',
+            color: 'orange',            
+            threshold: null,
+            tooltip: {
+                valueDecimals: 2
+            }
+        }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    chart: {
+                        height: 300
+                    },
+                    subtitle: {
+                        text: null
+                    },
+                    navigator: {
+                        enabled: false
+                    }
+                }
+            }]
+        }
+    });
+
+    var data = {{context.air_humidity| safe}};
+    chart = Highcharts.stockChart('container_air_humidity_graph', {
+        chart: {
+            height: 400,
+            zoomType: 'xy'
+        },
+
+        title: {
+            text: 'Air Humidity'
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        subtitle: {
+            text: 'Click small/large buttons or change window size to test responsiveness'
+        },
+
+        xAxis: {
+            type: 'datetime',                    
+        },
+
+        yAxis: {
+            title: {
+                text: 'Air Humidity [%]'
+            },
+            labels: {
+                align: 'left',
+                reserveSpace: true
+            }    
+        },
+
+        rangeSelector: {
+            inputPosition: {
+                align: 'left',
+                x: 0,
+                y: 0
+            },
+            buttonPosition: {
+                align: 'right',
+                x: 0,
+                y: 0
+            },
+        },
+
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[2]],
+                        [1, Highcharts.color(Highcharts.getOptions().colors[2]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+
+
+        series: [{
+            name: 'Air Humidity [%]',
+            data: data,
+            type: 'area',
+            color: 'green',            
+            threshold: null,
+            tooltip: {
+                valueDecimals: 2
+            }
+        }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    chart: {
+                        height: 300
+                    },
+                    subtitle: {
+                        text: null
+                    },
+                    navigator: {
+                        enabled: false
+                    }
+                }
+            }]
+        }
+    });
+
+    var data = {{context.soil_humidity| safe}};
+    chart = Highcharts.stockChart('container_soil_humidity_graph', {
+        chart: {
+            height: 400,
+            zoomType: 'xy'
+        },
+
+        title: {
+            text: 'Soil Humidity'
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        subtitle: {
+            text: 'Click small/large buttons or change window size to test responsiveness'
+        },
+
+        xAxis: {
+            type: 'datetime',                    
+        },
+
+        yAxis: {
+            title: {
+                text: 'Soil Humidity [%]'
+            },
+            labels: {
+                align: 'left',
+                reserveSpace: true
+            }    
+        },
+
+        rangeSelector: {
+            inputPosition: {
+                align: 'left',
+                x: 0,
+                y: 0
+            },
+            buttonPosition: {
+                align: 'right',
+                x: 0,
+                y: 0
+            },
+        },
+
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[1]],
+                        [1, Highcharts.color(Highcharts.getOptions().colors[1]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+
+
+        series: [{
+            name: 'Soil Humidity [%]',
+            data: data,
+            type: 'area',
+            color: 'black',            
+            threshold: null,
+            tooltip: {
+                valueDecimals: 2
+            }
+        }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    chart: {
+                        height: 300
+                    },
+                    subtitle: {
+                        text: null
+                    },
+                    navigator: {
+                        enabled: false
+                    }
+                }
+            }]
+        }
+    });
+
+    var data = {{context.water_level| safe}};
+    chart = Highcharts.stockChart('container_water_level_graph', {
+        chart: {
+            height: 400,
+            zoomType: 'xy'
+        },
+
+        title: {
+            text: 'Water Level'
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        subtitle: {
+            text: 'Click small/large buttons or change window size to test responsiveness'
+        },
+
+        xAxis: {
+            type: 'datetime',                    
+        },
+
+        yAxis: {
+            title: {
+                text: 'Water Level [cm]'
+            },
+            labels: {
+                align: 'left',
+                reserveSpace: true
+            }    
+        },
+
+        rangeSelector: {
+            inputPosition: {
+                align: 'left',
+                x: 0,
+                y: 0
+            },
+            buttonPosition: {
+                align: 'right',
+                x: 0,
+                y: 0
+            },
+        },
+
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+
+
+        series: [{
+            name: 'Water Level [cm]',
+            data: data,
+            type: 'area',
+            color: 'blue',            
+            threshold: null,
+            tooltip: {
+                valueDecimals: 2
+            }
+        }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    chart: {
+                        height: 300
+                    },
+                    subtitle: {
+                        text: null
+                    },
+                    navigator: {
+                        enabled: false
+                    }
+                }
+            }]
+        }
+    });
+
+    var data = {{context.ndvi| safe}};
+    chart = Highcharts.stockChart('container_ndvi_graph', {
+        chart: {
+            height: 400,
+            zoomType: 'xy'
+        },
+
+        title: {
+            text: 'NDVI'
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        subtitle: {
+            text: 'Click small/large buttons or change window size to test responsiveness'
+        },
+
+        xAxis: {
+            type: 'datetime',                    
+        },
+
+        yAxis: {
+            title: {
+                text: 'NDVI'
+            },
+            labels: {
+                align: 'left',
+                reserveSpace: true
+            }    
+        },
+
+        rangeSelector: {
+            inputPosition: {
+                align: 'left',
+                x: 0,
+                y: 0
+            },
+            buttonPosition: {
+                align: 'right',
+                x: 0,
+                y: 0
+            },
+        },
+
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[3]],
+                        [1, Highcharts.color(Highcharts.getOptions().colors[3]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+
+
+        series: [{
+            name: 'NDVI',
+            data: data,
+            type: 'area',
+            color: 'red',            
+            threshold: null,
+            tooltip: {
+                valueDecimals: 2
+            }
+        }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    chart: {
+                        height: 300
+                    },
+                    subtitle: {
+                        text: null
+                    },
+                    navigator: {
+                        enabled: false
+                    }
+                }
+            }]
+        }
+    });
+ 
+</script>
+
+{% endblock my_content %}
