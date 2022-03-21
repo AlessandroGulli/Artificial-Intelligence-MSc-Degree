@@ -1,6 +1,6 @@
 # Smart Green Care
 
-> An IOT System to monitor health plants.
+> An IOT System to monitor health plants. Final project of IOT and 3D Intelligence Systems, a.a 2020/2021.
 
 - Image processing to compute NDVI which is an index of plant lively: OpenCV and Deep Learning (Mask-RCNN)
 - Web development: Server with Python and Flask.
