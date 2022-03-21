@@ -8,7 +8,7 @@ A repository on "Distributed Artificial Intelligence" project a.a 2020/2021. Thr
 <p align="left">
 <img src="./images/MADDPG.png" alt="MADDPG" width="320">
 <p>
- <p align="roght">
+ <p align="right">
 <img src="./images/MADDPG-algo.png" alt="MADDPG" width="320">
 <p>
 
