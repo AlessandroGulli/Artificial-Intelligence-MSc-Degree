@@ -27,12 +27,25 @@ The entire chain of operations on video images can be summarized as follow:
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Architecture.JPG)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Mask.JPG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/User.JPG)
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Mask.JPG)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Centroids.JPG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/centroids.JPG)
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/countorus.JPG)
 
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/rectify.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/HOG.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/HOG2.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/MaskRCNN.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Removals.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Removals1.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Removals2.JPG)
 
