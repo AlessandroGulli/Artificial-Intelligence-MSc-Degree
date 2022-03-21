@@ -25,4 +25,14 @@ The entire chain of operations on video images can be summarized as follow:
 * A user interface for final visualization collecting all the information retrieved
 
 
-[!Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Architecture.JPG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Architecture.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Mask.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Mask.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Centroids.JPG)
+
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/countorus.JPG)
+
+
