@@ -27,7 +27,7 @@ The entire chain of operations on video images can be summarized as follow:
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Architecture.JPG)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/User.JPG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/User.jpg)
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/Mask.JPG)
 
