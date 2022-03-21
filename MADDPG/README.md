@@ -2,7 +2,7 @@
 
 [image1]: https://user-images.githubusercontent.com/10624937/42135623-e770e354-7d12-11e8-998d-29fc74429ca2.gif "Trained Agent"
 
-# Deep Reinforcement Learning : Collaboration and Competition using MADDPG
+# Distributed Artifical Intelligence: Collaboration using MADDPG
 A repository on "Distributed Artificial Intelligence" project a.a 2020/2021. Throughout the course multi-agents hold a huge of part of theory, fascinating by this concept a I used MADDPG to address the issue of Collaboration exploiting the paper "Multi-Agent Actor-Critic for Mixed Cooperative-Competitive Environments"
 
 ## Project's goal
