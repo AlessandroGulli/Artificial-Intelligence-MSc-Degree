@@ -4,10 +4,10 @@
 
 - This repository aims to expose the choices and technical aspects concerning the final project of Vision And Cognitive Systems course A.A 2019/2020.
 	Given an input video recorded inside “Galleria Estense” interiors, the mandatory tasks for the project are:
-	 Painting detection and rectification
-	 Painting Retrieval
-	 People detection
-	 People localization
+	* Painting detection and rectification
+	* Painting Retrieval
+	* People detection
+	* People localization
 
 The approach chose to deal with the previous complex points was to divide into two different branches the technical aspects of implementations. 
 The first regarding the paintings and the second regarding people detection. 
@@ -16,11 +16,13 @@ To validate detections on both parts and in the attempt to eliminate false posit
 About paintings, once detection is validated by SMV, a SIFT classification classifies canvases against a pre-computed DB of descriptors.
 
 The entire chain of operations on video images can be summarized as follow:
-o Image processing on input frame video
-o Painting detection from the context
-o Painting outliers removals through linear SVM classifier trained on HOG features
-o Painting classification from DB
-o People and statue detection with Mask R-CNN
-o People detection outliers through linear SVM classifier trained on HOG features
-o A user interface for final visualization collecting all the information retrieved
+* Image processing on input frame video
+* Painting detection from the context
+* Painting outliers removals through linear SVM classifier trained on HOG features
+* Painting classification from DB
+* People and statue detection with Mask R-CNN
+* People detection outliers through linear SVM classifier trained on HOG features
+* A user interface for final visualization collecting all the information retrieved
+
+
 
