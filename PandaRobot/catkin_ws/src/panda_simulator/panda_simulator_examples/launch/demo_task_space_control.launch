@@ -1,0 +1,24 @@
+<launch>
+
+    <arg name="debug" default="false"/>
+    <arg name="joint" default="true"/>
+    
+    <arg unless="$(arg debug)" name="launch_prefix" value="" />
+    <arg if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+    <!-- Run Rviz -->
+    <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false"
+        args="-d $(find panda_simulator_examples)/scripts/config/rviz_configs.rviz" output="screen">
+    </node>
+
+    <group if="$(eval arg('joint') == true)">
+        <node pkg="panda_simulator_examples" type="joint_space_control.py" name="ts_control_sim_only"
+            output="screen">
+        </node>
+    </group>
+    <group unless="$(eval arg('joint') == true)">
+        <node pkg="panda_simulator_examples" type="task_space_control.py" name="ts_control_sim_only"
+            output="screen">
+        </node>
+    </group>
+
+</launch>
