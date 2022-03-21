@@ -8,7 +8,7 @@ A repository on "Distributed Artificial Intelligence" project a.a 2020/2021. Thr
 <p align="center">
 <img src="./images/MADDPG.png" alt="MADDPG" width="420">
 <p>
- <p align="center">
+<p align="center">
 <img src="./images/MADDPG-algo.png" alt="MADDPG" width="550">
 <p>
 
@@ -42,3 +42,8 @@ In particular, each of the agents in this model has its own actor and critic mod
 
 Throughout training the agents all use a common experience replay buffer (a set of stored previous 1-step experiences) and draw independent samples.
 With the current set of models and hyperparameters the environment can be solved in around 3200 steps.
+
+<p align="left">
+<img src="./images/reusults.png" alt="results" width="550">
+<p>
+ 
