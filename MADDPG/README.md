@@ -5,9 +5,9 @@
 # Distributed Artifical Intelligence: Collaboration using MADDPG
 A repository on "Distributed Artificial Intelligence" project a.a 2020/2021. Throughout the course multi-agents hold a huge of part of theory, fascinating by this concept a I used MADDPG to address the issue of Collaboration exploiting the paper "Multi-Agent Actor-Critic for Mixed Cooperative-Competitive Environments"
 
-<center>
+<p align="center">
 <img src="./images/MADDPG.png" alt="MADDPG" width="320">
-</center>
+<p>
 
 ## Project's goal
 
