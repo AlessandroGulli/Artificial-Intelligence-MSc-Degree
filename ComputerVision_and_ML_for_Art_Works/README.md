@@ -57,6 +57,7 @@ Both the datasets have been collected by hand from the web and free datasets. Am
 * 9 orientations 
 * 8x8 pixels per cell 
 * 2x2 cell per block
+
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/HOG.JPG)
 
 Features for people – statues images have been retrieved setting the following parameters:
