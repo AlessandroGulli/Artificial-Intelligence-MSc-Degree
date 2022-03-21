@@ -52,7 +52,7 @@ Regarding people detection, it has been implemented a pre-trained Mask R-CNN on 
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/ComputerVision_and_ML_for_Art_Works/images/MaskRCNN.JPG)
 
-To get features from images, as mentioned in the introduction, have been computed the Histograms of Oriented Gradients. The HOG descriptor returns a real-valued feature vector. The dimensionality of this feature vector is dependent on the parameters chosen for the orientations, pixels_per_cell, and cells_per_block.
+To get features from images, as mentioned before, have been computed the Histograms of Oriented Gradients. The HOG descriptor returns a real-valued feature vector. The dimensionality of this feature vector is dependent on the parameters chosen for the orientations, pixels_per_cell, and cells_per_block.
 Both the datasets have been collected by hand from the web and free datasets. Among paintings pictures are not present examples from “Galleria Estense”. Nevertheless the same operational function, the classifiers are distinct in terms of characteristics. Paintings classifier works on Lab images with a dimension of 128x128 pixels, on the other hand, people classifiers work on HLS images with 100x100 pixels. The choice of these parameters came out after several attempts with the aim to achieve the best and homogenous result possible to work fine on a good part of the videos provided. Features for paintings – not painting images have been retrieved setting the following parameters: 
 * 9 orientations 
 * 8x8 pixels per cell 
