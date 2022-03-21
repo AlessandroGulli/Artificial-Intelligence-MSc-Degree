@@ -44,6 +44,6 @@ Throughout training the agents all use a common experience replay buffer (a set 
 With the current set of models and hyperparameters the environment can be solved in around 3200 steps.
 
 <p align="left">
-<img src="./images/reusults.png" alt="results" width="550">
+<img src="./images/Results.png" alt="results" width="550">
 <p>
  
