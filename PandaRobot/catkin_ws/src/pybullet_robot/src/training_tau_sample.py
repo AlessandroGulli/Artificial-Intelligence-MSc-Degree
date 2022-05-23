@@ -37,6 +37,59 @@ import multiprocessing as mp
 import datetime
 import logging
 
+class StopOnReachingNumberOfTargets(BaseCallback):
+
+    """     
+    Stop the training once a threshold in target points has been reached
+    """
+          
+    def __init__(self, eval_env: Union[gym.Env, VecEnv], targets_threshold: int = 4, verbose: int = 1):    
+        super(StopOnReachingNumberOfTargets, self).__init__(verbose=verbose)
+        self.targets_threshold = targets_threshold
+     	
+        # Convert to VecEnv for consistency
+        if not isinstance(eval_env, VecEnv):
+            eval_env = DummyVecEnv([lambda: eval_env])
+
+        self.eval_env = eval_env 
+        
+     
+    def _on_step(self) -> bool:     	
+        continue_training = bool(self.training_env.venv.envs[0].n_points < self.targets_threshold)
+     	
+        if self.verbose > 0 and not continue_training:
+           print(f"Stopping training because amount of targets points reached:{self.training_env.venv.envs[0].n_points}")
+           self.training_env.venv.envs[0].n_points = 0
+        
+        return continue_training
+        
+class StopOnReachingTorusRegions(BaseCallback):
+
+    """     
+    Stop the training once a threshold in target points has been reached
+    """
+          
+    def __init__(self, eval_env: Union[gym.Env, VecEnv], verbose: int = 1):    
+        super(StopOnReachingTorusRegions, self).__init__(verbose=verbose)        
+     	
+        # Convert to VecEnv for consistency
+        if not isinstance(eval_env, VecEnv):
+            eval_env = DummyVecEnv([lambda: eval_env])
+
+        self.eval_env = eval_env 
+        
+     
+    def _on_step(self) -> bool:     	
+        continue_training = bool(self.training_env.venv.envs[0].torus_region < len(self.training_env.venv.envs[0].r))
+     	
+        if self.verbose > 0 and not continue_training:
+           print(f"Congratulation!!! You achieved an outstanding result, all the regions were explored with an average accuracy of 1 cm")
+           self.training_env.venv.envs[0].torus_region = 0
+        
+        return continue_training    
+
+
+
 class CustomEvalCallback(EventCallback):
     """
     Callback for evaluating an agent.
@@ -245,8 +298,10 @@ class PandaEnv(gym.Env):
         joint_angles = 7
         # q_dot   -> 7 items, one for each joint
         joint_velocities = 7
+		# distances from objects
+        distances = 7
 
-        total_observations = delta_cartesian_pos_ori + joint_angles + joint_velocities
+        total_observations = delta_cartesian_pos_ori + joint_angles + joint_velocities + distances
         self.observation_space = spaces.Box(np.array([-np.inf]*total_observations), np.array([np.inf]*total_observations))
         
         # Robot initial poses
@@ -256,15 +311,29 @@ class PandaEnv(gym.Env):
         self.roll_out_state = {'Change_Target': True, 'Target': self.home_pose}
         self.reset_pose = self.home_pose
         self.stateId = -1
+		self.n_points = 0
+        self.past_action = np.zeros((9, 1))
+        self.counter = 0
         
         # Torus Parameters
         self.R = 0.45
         self.r = 0.15
         self.angle = np.pi/8
+		
+		# Acceleration
+        self.window_size = 40
+        self.avg_idx = 0
+        self.sampled_values = np.zeros((self.window_size, 7))
+        # Torque
+        self.tau = self.robot.torque_compensation()
         
         logging.basicConfig(filename="./RL/models/Events.log", format="%(asctime)s, %(message)s", filemode="w")
         self.logger = logging.getLogger()
         self.logger.setLevel(logging.DEBUG)
+		
+		#Error Statistics     
+        self.current_error = 0
+        self.average_error = []
         
         
     def reset_to_start_pose(self, points, T, NPoints, gripper_cmd, world):        
@@ -312,7 +381,6 @@ class PandaEnv(gym.Env):
         points = np.array([[self.default_pose[0], self.default_pose[1], self.default_pose[2], self.default_pose[3], self.default_pose[4], self.default_pose[5]], 
 			   [self.reset_pose[0]  , self.reset_pose[1]  , self.reset_pose[2]  , self.reset_pose[3]  , self.reset_pose[4]  , self.reset_pose[5]]]) 
 	
-
         self.reset_to_start_pose(points, T, NPoints, gripper_cmd, self.world)
         '''
  
@@ -322,6 +390,7 @@ class PandaEnv(gym.Env):
         if self.roll_out_state['Change_Target'] == True:
             self.roll_out_state['Target'][0:3] = sample_torus_coordinates(self.r, self.R, self.angle, 1).flatten()
             self.roll_out_state['Target'][3:6] = self.planning._points[0][3:6]
+			self.err_pos_max = np.linalg.norm(self.roll_out_state['Target'][0:3] - self.robot.ee_pose()[0])
             self.roll_out_state['Change_Target'] = False        	
 
         curr_pos, curr_ori = self.robot.ee_pose()
@@ -337,7 +406,7 @@ class PandaEnv(gym.Env):
 
         self.start_time = time.time()
 
-        observation = np.concatenate([ delta_x.reshape([6,1]), self.goal_joint_angles[0:7].reshape([7,1]), self.goal_joint_velocities[0:7].reshape([7,1]) ]).reshape(-1)
+        observation = np.concatenate([ delta_x.reshape([6,1]), self.goal_joint_angles[0:7].reshape([7,1]), self.goal_joint_velocities[0:7].reshape([7,1]), np.zeros((7, 1)).reshape([7,1]) ]).reshape(-1)
 
         return observation
 
@@ -353,12 +422,27 @@ class PandaEnv(gym.Env):
         task-space force, and then the corresponding joint torques.
         """
         action = action.copy()
-        action = np.clip(action, self.action_space.low, self.action_space.high) 
-        tau = np.concatenate([action, [0., 0.]])*10                
+        action = np.clip(action, self.action_space.low, self.action_space.high)
+        action = np.concatenate([action, [0., 0.]])
         tourque_upper_limits = np.asarray([87, 87, 87, 87, 12, 12, 12, 0, 0])
-        tourque_lower_limits = (-1)*tourque_upper_limits        
-        torque_cmd = np.clip(tourque_lower_limits, tourque_upper_limits, tau + self.robot.torque_compensation())
+        tourque_lower_limits = (-1)*tourque_upper_limits
+
+        #torque_cmd = np.clip(action*10 + self.robot.torque_compensation(), tourque_lower_limits, tourque_upper_limits)
+        torque_cmd = np.clip(action*10 + self.robot.torque_compensation(), tourque_lower_limits, tourque_upper_limits)
+
+        # current velocities and angles
+        curr_joint_angles = np.asarray(self.robot.angles()).reshape([9,1])
+        curr_joint_velocities = np.asarray(self.robot.joint_velocities()).reshape([9,1])
+        # joint accelerations
+        curr_joint_accelerations = (curr_joint_velocities - self.prev_joint_velocities)*self.sim_rate
+        self.prev_joint_velocities = curr_joint_velocities
         
+		if self.avg_idx > (self.window_size - 1):
+           self.avg_idx = 0
+        self.sampled_values[self.avg_idx] = curr_joint_accelerations[0:7].flatten()         
+        self.avg_idx +=1            
+        avg_acc_values = np.mean(self.sampled_values, axis=0)  
+		
         error_thresh = np.asarray([0.010, 0.010])      
 
         self.robot.exec_torque_cmd(torque_cmd)
@@ -373,9 +457,10 @@ class PandaEnv(gym.Env):
         string_debug =''
         # Sample from torus region
         if self.roll_out_state['Change_Target'] == True:
-        	self.roll_out_state['Target'][0:3] = sample_torus_coordinates(self.r, self.R, self.angle, 1).flatten()
+        	self.roll_out_state['Target'][0:3] = sample_torus_coordinates(self.r[self.torus_region], self.R, self.angle[self.torus_region], 1).flatten()
         	self.roll_out_state['Target'][3:6] = self.planning._points[0][3:6]
         	self.roll_out_state['Change_Target'] = False
+        	self.err_pos_max = np.linalg.norm(self.roll_out_state['Target'][0:3] - self.robot.ee_pose()[0])
         	string_debug = f"Target changed: {self.roll_out_state['Target']}"
         	print(string_debug)
    
@@ -390,8 +475,11 @@ class PandaEnv(gym.Env):
         err_pos = np.linalg.norm(delta_pos)
         err_ori = np.linalg.norm(delta_ori)
         global_target_error = np.asarray([err_pos, err_ori])
-
-        # Check rollout status
+		
+        # Running Mean Error Computation
+        self.current_error = 0.8*self.current_error + 0.2*weighted_minkowskian_distance(delta_pos, delta_ori, w_rot=1.0) if self.current_error > 0  else weighted_minkowskian_distance(delta_pos, delta_ori, w_rot=1.0)     
+        
+		# Check rollout status
         total_time = time.time() - self.start_time           
         if np.any(global_target_error > error_thresh):
             done = False             
@@ -399,37 +487,58 @@ class PandaEnv(gym.Env):
             if err_pos >= 0.8:               
                self.reset_pose = self.home_pose
                self.stateId = -1
-               string_debug = f"Home Position Reset, dist from target: {err_pos}, {err_ori}" 
+               string_debug = f"Home Position Reset, dist from target: {err_pos}, {err_ori}\t" 
                done = True               
-            elif total_time >= 8:                             
-               #self.reset_pose = np.concatenate([self.robot.ee_pose()[0], quaternion_to_euler_angle(pb, self.robot.ee_pose()[1].w,self.robot.ee_pose()[1].x,self.robot.ee_pose()[1].y,self.robot.ee_pose()[1].z)])
-               #self.reset_pose = np.concatenate([self.robot.ee_pose()[0], self.roll_out_state['Target'][3:6]])
+            elif total_time >= 8:                            
                self.stateId = 0
                pb.saveBullet("state.bullet")               
-               string_debug = f"Last Position Reset, dist from target: {err_pos}, {err_ori}"
+               string_debug = f"Last Position Reset, dist from target: {err_pos}, {err_ori}\t"
                done = True                                    
         elif np.all(global_target_error <= error_thresh):              
             self.roll_out_state['Change_Target'] = True 
             done = False                   
             now = datetime.datetime.now()   
-            string_debug = f"Target reached {self.roll_out_state['Target']} on {now.day}/{now.month}/{now.year} at {now.hour}:{now.minute}:{now.second}"                                 
+            string_debug = f"Target reached {self.roll_out_state['Target']} on {now.day}/{now.month}/{now.year} at {now.hour}:{now.minute}:{now.second}\t"  
+            self.last_time_point_reached = time.time()  
+            self.n_points += 1                             
             print(string_debug) 
+        
+        # Try to change target if the robot get stucked
+        if (time.time() - self.last_time_point_reached) > 60*2: #2 min
+        	self.roll_out_state['Change_Target'] = True         	
+        	self.last_time_point_reached = time.time()  
+        	self.average_error.append(self.current_error)
+        	string_debug += f"Robot stucked: changing_target - Current Error:{self.current_error} - Average Error:{sum(self.average_error)/max(self.counter, 1)}\t"
+        	self.current_error = 0
+        	self.counter += 1   
+        	        	
+        	if (sum(self.average_error))/(max(self.counter, 1)) <= np.linalg.norm([0.01, 0.01]):
+        	       self.torus_region += 1
+				   if self.torus_region < len(self.r):
+        	           strig_debug += f"Promotion -> R: {self.R}, r: {self.r[self.torus_region]}, angle: {self.angle[self.torus_region]*2}"
+        	           print(string_debug)
+            else:
+                print(string_debug)   			
         
         # Debug logs
         if len(string_debug) > 0:
-        	self.logger.debug(string_debug)  
+        	self.logger.debug(string_debug)   
             
         # Get observations
-        observation = np.concatenate([ delta_x.reshape([6,1]), self.robot.angles()[0:7].reshape([7,1]), self.robot.joint_velocities()[0:7].reshape([7,1]) ]).reshape(-1)          
+        observation = np.concatenate([ delta_x.reshape([6,1]), self.robot.angles()[0:7].reshape([7,1]), self.robot.joint_velocities()[0:7].reshape([7,1]), np.zeros((7, 1)).reshape([7,1]) ]).reshape(-1)          
 
-        # Compute reward        
+        ## Compute reward        
         lamba_err = 1.
-        lamba_eff = 0.     
+        lamba_eff = 0.001
+        lambda_acc = 0.001
+        lambda_profile = 1.	
+        lambda_vel = 1.	   
                 
-        distance = "weighted"
+        distance = "mine"
         if distance == "weighted":               
-              delta_x_error = weighted_minkowskian_distance(delta_pos, delta_ori, w_rot=1.0)                            
-              reward = -lamba_err*delta_x_error               
+              delta_x_error = weighted_minkowskian_distance(delta_pos, delta_ori, w_rot=1.0) 
+              acc_error = np.sqrt(np.sum(np.square(np.linalg.norm(avg_acc_values))))            
+              reward = -lamba_err*delta_x_error - lamba_eff*acc_error           
         else:      
              X, Y, Z, X_target, Y_target, Z_target = calc_reference_frames(self.world, self.roll_out_state['Target'][0:3], self.roll_out_state['Target'][3:6], pb)        
              delta_x = np.asarray(X_target.reshape(3,1) - X.reshape(3,1))
@@ -438,10 +547,16 @@ class PandaEnv(gym.Env):
              err_y = np.linalg.norm(delta_y)
              delta_z = np.asarray(Z_target.reshape(3,1) - Z.reshape(3,1))
              err_z = np.linalg.norm(delta_z)
-                
-             delta_x_error = err_x + err_y + err_z #+ err_pos        
-             reward = -lamba_err*(delta_x_error)  
-        
+             
+             joints_acceleration = np.linalg.norm(avg_acc_values)
+             joints_velocities = np.linalg.norm(curr_joints_velocities)			 
+             delta_x_error = err_x + err_y + err_z + err_pos
+             #delta_x_error = np.abs(np.linalg.norm(X_target) - err_x) + np.abs(np.linalg.norm(Y_target) - err_y) + np.abs(np.linalg.norm(Z_target) - err_z) + np.abs(np.linalg.norm(self.roll_out_state['Target'][0:3]) - err_pos)
+                                      
+             reward = np.exp(-lamba_err*(delta_x_error)) + \
+               		 lambda_acc*np.exp(-lamba_eff*joints_acceleration) +\
+					 lambda_vel*np.exp(-lambda_profile*joints_velocities*np.linalg.norm(err_pos - self.err_pos_max/2))
+             
         info = {} 
         
         #pb.removeAllUserDebugItems()
@@ -475,20 +590,20 @@ if __name__ == '__main__':
     env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.)        
     # Custom actor (pi) and value function (vf) networks
     # of three layers of size 128 each with Tanh activation function
-    policy_kwargs = dict(activation_fn=th.nn.Tanh, net_arch=[dict(pi=[64, 64], vf=[64, 64])])
+    policy_kwargs = dict(activation_fn=th.nn.Tanh, net_arch=[dict(pi=[128, 128], vf=[128, 128])])
     # Stops training when the model reaches the maximum number of episodes
     callback_max_episodes = StopTrainingOnMaxEpisodes(max_episodes=20000, verbose=3)    
     # Use continuos actions for evaluation    
     eval_callback_best = CustomEvalCallback(env, best_model_save_path=log_dir, log_path=log_dir, n_eval_episodes=2, eval_freq=500, deterministic=True, render=False)
+	target_callback_stop = StopOnReachingNumberOfTargets(env, targets_threshold=100)
+	exploration_completed = StopOnReachingTorusRegions(env)
     callback_on_reward = StopTrainingOnRewardThreshold(reward_threshold=10000, verbose = 3)
     eval_callback_stop = EvalCallback(env, callback_on_new_best=callback_on_reward, verbose=3)
-    callback = CallbackList([callback_max_episodes, eval_callback_best, eval_callback_stop])
+    callback = CallbackList([callback_max_episodes, eval_callback_best, eval_callback_stop, target_callback_stop, exploration_completed])
     
-    model = PPO("MlpPolicy", env, policy_kwargs=policy_kwargs, verbose=3, tensorboard_log="./RL/panda_PPO_tensorboard/").learn(int(1e15), callback=callback, tb_log_name="telemetry")    
+    model = PPO("MlpPolicy", env, batch_size=128, n_steps=4096, clip_range=0.2, policy_kwargs=policy_kwargs, verbose=3, tensorboard_log="./RL/panda_PPO_tensorboard/").learn(int(1e15), callback=callback, tb_log_name="telemetry")    
     
     model.save(os.path.join(log_dir, "final_model")) 
     
     stats_path = os.path.join(log_dir, "vec_normalize_final.pkl")
     env.save(stats_path)
-
-	

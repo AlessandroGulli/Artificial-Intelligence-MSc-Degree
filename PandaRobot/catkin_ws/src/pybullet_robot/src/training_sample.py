@@ -59,8 +59,8 @@ class StopOnReachingNumberOfTargets(BaseCallback):
         continue_training = bool(self.training_env.venv.envs[0].n_points < self.targets_threshold)
      	
         if self.verbose > 0 and not continue_training:
-           print(f"Stopping training because amount of targets points reached:{self.training_env.venv.envs[0].n_points}")
-           self.training_env.venv.envs[0].n_points = 0
+           print(f"Congratulation!!! You achieved an outstanding result, all the regions were explored with an average accuracy of 1 cm")
+           self.training_env.venv.envs[0].torus_region = 0
         
         return continue_training
         
@@ -81,7 +81,7 @@ class StopOnReachingTorusRegions(BaseCallback):
         
      
     def _on_step(self) -> bool:     	
-        continue_training = bool(self.training_env.venv.envs[0].torus_region < len(self.training_env.venv.envs[0].angle))
+        continue_training = bool(self.training_env.venv.envs[0].torus_region <= len(self.training_env.venv.envs[0].angle))
      	
         if self.verbose > 0 and not continue_training:
            print(f"Stopping training because amount of targets points reached:{self.training_env.venv.envs[0].n_points}")
@@ -558,9 +558,10 @@ class PandaEnv(gym.Env):
         	self.counter += 1   
         	print(string_debug)           	
         	if (sum(self.average_error))/(max(self.counter, 1)) <= np.linalg.norm([0.01, 0.01]):
-        	       self.torus_region = np.clip(self.torus_region + 1, 0, len(self.r))
-        	       strig_debug += f"Promotion -> R: {self.R}, r: {self.r[self.torus_region]}, angle: {self.angle[self.torus_region]*2}"
-        	       print(string_debug)    
+        	       self.torus_region += 1
+				   if self.torus_region < len(self.r):
+        	           strig_debug += f"Promotion -> R: {self.R}, r: {self.r[self.torus_region]}, angle: {self.angle[self.torus_region]*2}"
+        	           print(string_debug)    
         
         # Debug logs
         if len(string_debug) > 0:
