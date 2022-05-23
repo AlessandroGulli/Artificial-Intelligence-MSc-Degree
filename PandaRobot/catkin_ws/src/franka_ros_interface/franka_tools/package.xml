@@ -10,9 +10,6 @@
   <maintainer email="sxs1412@bham.ac.uk">Saif Sidhik</maintainer>
 
   <license>Apache 2.0</license>
-
-  <author email="sxs1412@bham.ac.uk">Saif Sidhik</author>
-    
     
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>
