@@ -7,13 +7,6 @@
     franka_ros_interface and panda_simulator
   </description>
 
-  <maintainer email="sxs1412@bham.ac.uk">
-    Saif Sidhik
-  </maintainer>
-  <license>Apache 2.0</license>
-
-  <author>Saif Sidhik</author>
-
   <buildtool_depend>catkin</buildtool_depend>
 
   <!-- package contains messages -->
