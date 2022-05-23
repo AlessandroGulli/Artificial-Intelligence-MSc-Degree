@@ -7,12 +7,6 @@
     for Franka Panda robots using libfranka and franka-ros.
   </description>
 
-  <maintainer email="sxs1412@bham.ac.uk">
-    Saif Sidhik
-  </maintainer>
-  <license>Apache 2.0</license>
-  <author>Saif Sidhik</author>
-
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>franka_interface</run_depend>
   <run_depend>franka_moveit</run_depend>
