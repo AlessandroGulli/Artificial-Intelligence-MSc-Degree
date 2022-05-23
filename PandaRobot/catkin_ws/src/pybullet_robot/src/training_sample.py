@@ -522,7 +522,7 @@ class PandaEnv(gym.Env):
         global_target_error = np.asarray([err_pos, err_ori])
         
         # Running Mean Error Computation
-        self.current_error = 0.8*self.current_error + 0.2*weighted_minkowskian_distance(delta_pos, delta_ori, w_rot=1.0)        
+        self.current_error = 0.8*self.current_error + 0.2*weighted_minkowskian_distance(delta_pos, delta_ori, w_rot=1.0) if self.current_error > 0  else weighted_minkowskian_distance(delta_pos, delta_ori, w_rot=1.0)     
 
         # Check rollout status
         total_time = time.time() - self.start_time           
@@ -572,7 +572,10 @@ class PandaEnv(gym.Env):
 
         # Compute reward        
         lamba_err = 1.
-        lamba_eff = 0.001   
+        lamba_eff = 0.001
+        lambda_acc = 0.001
+        lambda_profile = 1.	
+        lambda_vel = 1.		
                 
         distance = "mine"
         if distance == "weighted":               
@@ -589,11 +592,14 @@ class PandaEnv(gym.Env):
              delta_z = np.asarray(Z_target.reshape(3,1) - Z.reshape(3,1))
              err_z = np.linalg.norm(delta_z)
              
-             joints_acceleration = np.sqrt(np.sum(np.square(np.linalg.norm(avg_acc_values))))                
+             joints_acceleration = np.linalg.norm(avg_acc_values)
+             joints_velocities = np.linalg.norm(curr_joints_velocities)			 
              delta_x_error = err_x + err_y + err_z + err_pos
              #delta_x_error = np.abs(np.linalg.norm(X_target) - err_x) + np.abs(np.linalg.norm(Y_target) - err_y) + np.abs(np.linalg.norm(Z_target) - err_z) + np.abs(np.linalg.norm(self.roll_out_state['Target'][0:3]) - err_pos)
                                       
-             reward = np.exp(-lamba_err*(delta_x_error)) + 0.001*np.exp(-lamba_eff*joints_acceleration) + 0.05*np.exp(-0.001*np.linalg.norm(curr_joint_velocities)*np.linalg.norm(err_pos - self.err_pos_max/2))
+             reward = np.exp(-lamba_err*(delta_x_error)) + \
+               		 lambda_acc*np.exp(-lamba_eff*joints_acceleration) +\
+					 lambda_vel*np.exp(-lambda_profile*joints_velocities*np.linalg.norm(err_pos - self.err_pos_max/2))
              
         info = {} 
         
