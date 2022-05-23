@@ -57,8 +57,8 @@ class StopOnReachingNumberOfTargets(BaseCallback):
     def _on_step(self) -> bool:     	
         continue_training = bool(self.training_env.venv.envs[0].n_points < self.targets_threshold)
      	
-        if self.verbose > 0 and not continue_training:
-           print(f"Stopping training because amount of targets points reached:{self.training_env.venv.envs[0].n_points}")
+        if self.verbose > 0 and not continue_training:           
+		   print("Congratulation!!! You achieved an outstanding result, all the regions were explored with an average accuracy of 1 cm")
            self.training_env.venv.envs[0].n_points = 0
         
         return continue_training
@@ -83,7 +83,7 @@ class StopOnReachingTorusRegions(BaseCallback):
         continue_training = bool(self.training_env.venv.envs[0].torus_region < len(self.training_env.venv.envs[0].r))
      	
         if self.verbose > 0 and not continue_training:
-           print(f"Congratulation!!! You achieved an outstanding result, all the regions were explored with an average accuracy of 1 cm")
+           print(f"Stopping training because amount of targets points reached:{self.training_env.venv.envs[0].n_points}")
            self.training_env.venv.envs[0].torus_region = 0
         
         return continue_training    
