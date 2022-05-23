@@ -7,13 +7,6 @@
     Franka Panda robot through franka-ros and libfranka.
   </description>
 
-  <maintainer email="sxs1412@bham.ac.uk">
-    Saif Sidhik
-  </maintainer>
-  <license>Apache 2.0</license>
-
-  <author>Saif Sidhik</author>
-
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>message_generation</build_depend>
