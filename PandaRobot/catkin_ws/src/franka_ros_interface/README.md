@@ -6,7 +6,7 @@ providing low-level control of the robot using ROS and [Python API][fri-doc].
 Franka ROS Interface provides utilites for controlling and managing the Franka Emika Panda robot. Contains exposed customisable controllers for the robot (joint position,
 velocity, torque), interfaces for the gripper, controller manager, coordinate frames interface, etc. Also provides utilities to control the robot using 'MoveIt!' and ROS Trajectory Action & ActionClient. This package also provides almost complete sim-to-real / real-to-sim transfer of code with the [Panda Simulator][ps-repo] package.
 
-Documentation Page: <https://justagist.github.io/franka_ros_interface>
+
 
 **This branch requires franka_ros release version 0.7.1** [![franka_ros_version](https://img.shields.io/badge/franka_ros-v0.7.1%20release-yellow.svg)](https://github.com/frankaemika/franka_ros/tree/49e5ac1055e332581b4520a1bd9ac8aaf4580fb1). (For older franka_ros versions, try building this package from the corresponding branches of this repo. All functionalities may not be available in older versions.)
 
@@ -14,7 +14,7 @@ A more unified ROS Python interface built over this package is available at [Pan
 
 
 
-**More usage examples can be found in the [PandaRobot](https://github.com/justagist/panda_robot) package.**
+
 
 #### Some useful ROS topics
 
@@ -50,10 +50,5 @@ Most of the above services and topics are wrapped using simple Python classes or
 - [*PandaRobot*](https://github.com/justagist/panda_robot) : Python interface providing higher-level control of the robot integrated with its gripper control, controller manager, coordinate frames manager, etc. with safety checks and other helper utilities. It also provides the kinematics and dynamics of the robot using the [KDL library](http://wiki.ros.org/kdl). It is built over Franka ROS Interface and provides a more intuitive and unified single-class interface.
 - [*franka_panda_description*][fpd-repo] : Robot description package modified from [*franka_ros*][franka-ros] package to include dynamics parameters for the robot arm (as estimated in [this paper](https://hal.inria.fr/hal-02265293/document)). Also includes transmission and control definitions required for the [*panda_simulator*][ps-repo] package.
 
-   [ps-repo]: <https://github.com/justagist/panda_simulator>
-   [fri-repo]: <https://github.com/justagist/franka_ros_interface>
-   [fpd-repo]: <https://github.com/justagist/franka_panda_description>
-   [fri-doc]: <https://justagist.github.io/franka_ros_interface>
-   [libfranka-doc]: <https://frankaemika.github.io/docs/installation_linux.html#building-from-source>
-   [franka-ros]: <https://github.com/frankaemika/franka_ros>
+ 
 
