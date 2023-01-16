@@ -9,7 +9,7 @@
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Architecture.png)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/NDVI.png)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/NVDI.png)
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Acquisitions.png)
 
@@ -19,7 +19,7 @@
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Final.png)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Telemetry.JPG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/telemetry.png)
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Web.png)
 
