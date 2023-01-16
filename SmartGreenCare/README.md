@@ -15,7 +15,7 @@
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/flow.JPG)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Final.PNG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Final.png)
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Telemetry.JPG)
 
