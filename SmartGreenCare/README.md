@@ -7,9 +7,9 @@
 - Gateway Nodes: Linux and Python
 - Electronics: Microcontrollers and Sensors
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Architecture.JPG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Architecture.png)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/NDVI.JPG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/NDVI.png)
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/DL.JPG)
 
@@ -19,9 +19,9 @@
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Telemetry.JPG)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Web.JPG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Web.png)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Prototype.JPG)
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Prot.png)
 
 
 
