@@ -19,8 +19,6 @@
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/HW.png)
 
-![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Final.png)
-
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/telemetry.png)
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Web.png)
@@ -31,6 +29,6 @@
 
 ![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Jetson.png)
 
-
+![Image](https://github.com/AlessandroGulli/AI_MS_Degree/blob/main/SmartGreenCare/images/Final.png)
 
 
