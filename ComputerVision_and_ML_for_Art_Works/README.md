@@ -1,4 +1,4 @@
-# Computer Vision and ML for Art Works
+# Computer Vision and ML for Artworks
 
 > A complete pipeline to detect, classify and segment art works and people from live videos.
 
