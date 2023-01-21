@@ -1,4 +1,4 @@
-# Joint Space Robot Control via Deep Reinforcement Learning
+# Joint Space Control of Robbot Manipulators via Deep Reinforcement Learning
 
 > Exploit reinforcement learning and controls to teach a robot to reach different targets in its workspace
 
