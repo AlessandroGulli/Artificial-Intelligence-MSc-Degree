@@ -7,4 +7,7 @@ This repository aims to show off my thesis work during a.a 2021/2022.
 > Paper in preparation for IEEE Robotics and Automation Letters (RA-L)
 
 
-![image](https://user-images.githubusercontent.com/29335742/222962247-3f495ff9-370b-4679-af44-c5103c0f20d9.png)
+<p align="center" width="50%">
+    <img width="70%" src="https://user-images.githubusercontent.com/29335742/222962247-3f495ff9-370b-4679-af44-c5103c0f20d9.png"> 
+</p>
+
