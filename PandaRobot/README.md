@@ -15,6 +15,8 @@ This repository aims to show off my thesis work during a.a 2021/2022.
 </p>
  <br/><br/>                                                                                                                             
 <p align="center" width="50%">
-    <img width="70%" src="https://user-images.githubusercontent.com/29335742/222962370-13607a6a-459f-4eaa-a8e7-688d526d6aef.png"> 
+    <img width="70%" src="https://user-images.githubusercontent.com/29335742/222963181-c1387092-c03e-4ed5-9ea9-f18c6f9e538b.png"> 
 </p>
+
+
 
