@@ -19,7 +19,9 @@ This repository aims to show off my thesis work during a.a 2021/2022.
 </p>
  <br/><br/> 
  
-Below a demo of some dexterity skills of the robot:
 
 ![Media2](https://user-images.githubusercontent.com/29335742/222967439-2c03949a-b074-403b-9890-26b5ea6dcbdf.gif)
+ <br/><br/> 
+Below a demo of some dexterity skills of the robot
+
 ![Media4](https://user-images.githubusercontent.com/29335742/222968348-2c89cfd0-09d7-4c8f-96ec-083e652e01cc.gif)
