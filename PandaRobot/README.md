@@ -4,7 +4,6 @@
 
 This repository aims to show off my thesis work during a.a 2021/2022. 
 
-**Paper in preparation for IEEE Robotics and Automation Letters (RA-L)**
 
 <p align="center" width="50%">
     <img width="70%" src="https://user-images.githubusercontent.com/29335742/222962823-f7a59982-6a3c-403a-b7c0-0e0da29606af.png">
